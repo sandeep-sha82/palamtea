@@ -21,8 +21,12 @@ create table if not exists public.banners (
 );
 create table if not exists public.site_settings (
   id integer primary key check (id = 1),
-  business_name text not null default 'Juniper & Bloom'
+  business_name text not null default 'Juniper & Bloom',
+  logo_text text not null default 'J',
+  logo_url text not null default ''
 );
+alter table public.site_settings add column if not exists logo_text text not null default 'J';
+alter table public.site_settings add column if not exists logo_url text not null default '';
 insert into public.site_settings(id,business_name) values (1,'Juniper & Bloom') on conflict(id) do nothing;
 create table if not exists public.store_admins (
   user_id uuid primary key references auth.users(id) on delete cascade

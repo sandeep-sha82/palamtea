@@ -14,7 +14,7 @@ Serve this folder over HTTP (ES modules do not work reliably from a `file://` UR
 4. Copy `config.example.js` to `config.js`. Fill in the project's URL and its public anon/publishable key. Never use a service role key in the browser.
 5. Host the folder on any static web host. The SQL setup creates a public `store-images` bucket with admin-only uploads. In the Products or Banners tab, choose an image file from your device to upload it, or paste an image URL. Public Google Drive share links are also accepted; set Drive access to “Anyone with the link” so visitors can see the image.
 
-The admin login button is the small person icon in the header. Supabase row-level security lets anyone read published items, while only user IDs listed in `store_admins` can edit or delete content or upload files. The included admin UI supports creating, editing, publishing/hiding, ordering, and deleting products and banners.
+The admin login button is the small person icon in the header. Supabase row-level security lets anyone read published items, while only user IDs listed in `store_admins` can edit or delete content or upload files. The included admin UI supports creating, editing, publishing/hiding, ordering, and deleting products and banners. The Brand tab lets an admin change the business name, replace the default “J” with another character, or upload/paste a logo image; the logo is shown in both the header and footer.
 
 ## Customize
 
