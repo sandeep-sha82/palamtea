@@ -32,3 +32,8 @@ Online payment is not enabled yet. When you select a provider, add checkout thro
 ## Edit the section below products
 
 The admin panel's “Below products” tab edits the garden/story section title, small heading, description, image, and button text. Run the updated `supabase-schema.sql` in Supabase SQL Editor to add the section settings columns to an existing project. Images can be uploaded to the existing `store-images` bucket.
+
+
+## Contact and social links
+
+The admin Brand tab now manages the contact email and optional Facebook and Instagram URLs. The email updates the contact link and mail order requests; social links appear in the footer when supplied. Run the updated `supabase-schema.sql` to add these settings to an existing project.

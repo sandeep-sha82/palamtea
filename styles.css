@@ -10,3 +10,4 @@
 /* Keep the post-product feature balanced with the product cards. */
 .origin{height:300px;min-height:300px;grid-template-columns:1fr 1fr}.origin>img{height:100%;min-height:0}.origin-copy{max-height:300px;overflow:auto}
 @media(max-width:760px){.origin{height:350px;min-height:350px;grid-template-columns:1fr;grid-template-rows:95px 255px}.origin>img{height:95px;min-height:95px}.origin-copy{max-height:255px;overflow:auto;padding:10px 7%}.origin h2{font-size:27px;line-height:1.02}.origin-copy>p:not(.eyebrow){font-size:10px;line-height:1.45;margin:7px 0 9px}.origin-copy .button{padding:10px 14px}}
+.social-links{display:flex;align-items:center;gap:14px}.social-links a{color:#d5ddd2;font-size:9px;letter-spacing:.04em}.social-links a:hover{color:#e4ad7f}.social-links[hidden]{display:none}
