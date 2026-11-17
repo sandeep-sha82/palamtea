@@ -6,6 +6,7 @@ create table if not exists public.products (
   price numeric(10,2) not null default 0 check (price >= 0),
   image_url text not null,
   active boolean not null default true,
+  available_for_purchase boolean not null default true,
   sort_order integer not null default 0,
   created_at timestamptz not null default now()
 );
@@ -25,6 +26,7 @@ create table if not exists public.site_settings (
   logo_text text not null default 'J',
   logo_url text not null default ''
 );
+alter table public.products add column if not exists available_for_purchase boolean not null default true;
 alter table public.site_settings add column if not exists logo_text text not null default 'J';
 alter table public.site_settings add column if not exists logo_url text not null default '';
 insert into public.site_settings(id,business_name) values (1,'Juniper & Bloom') on conflict(id) do nothing;

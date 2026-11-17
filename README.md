@@ -19,3 +19,11 @@ The admin login button is the small person icon in the header. Supabase row-leve
 ## Customize
 
 Update the contact email/address and story copy in `index.html`, and change the brand name under the Brand tab after setup. The included sample product and banner content is shown when Supabase is not configured or has no published rows.
+
+## Cart and order requests
+
+Published product cards have Add to cart controls. The cart is saved in the visitor's browser with `localStorage` and supports quantity changes, removal, and a subtotal. Visitors can enter delivery details and send an order request through their email app to the contact email in `index.html`. This is a request, not a confirmed order; the store should confirm availability, delivery charges, and payment instructions.
+
+Admins can turn off purchasing for an individual product in Products → Edit → “Allow add to cart” while leaving it visible. To add the required `available_for_purchase` column to an existing Supabase project, run the updated `supabase-schema.sql` in Supabase SQL Editor. It includes an `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` migration.
+
+Online payment is not enabled yet. When you select a provider, add checkout through a Supabase Edge Function or another trusted server endpoint: re-read current prices from Supabase, create the provider checkout session there, and verify the provider's signed webhook before marking an order paid. Keep secret keys out of `config.js` and the browser bundle.
