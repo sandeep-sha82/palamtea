@@ -27,3 +27,8 @@ Published product cards have Add to cart controls. The cart is saved in the visi
 Admins can turn off purchasing for an individual product in Products → Edit → “Allow add to cart” while leaving it visible. To add the required `available_for_purchase` column to an existing Supabase project, run the updated `supabase-schema.sql` in Supabase SQL Editor. It includes an `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` migration.
 
 Online payment is not enabled yet. When you select a provider, add checkout through a Supabase Edge Function or another trusted server endpoint: re-read current prices from Supabase, create the provider checkout session there, and verify the provider's signed webhook before marking an order paid. Keep secret keys out of `config.js` and the browser bundle.
+
+
+## Edit the section below products
+
+The admin panel's “Below products” tab edits the garden/story section title, small heading, description, image, and button text. Run the updated `supabase-schema.sql` in Supabase SQL Editor to add the section settings columns to an existing project. Images can be uploaded to the existing `store-images` bucket.

@@ -24,11 +24,21 @@ create table if not exists public.site_settings (
   id integer primary key check (id = 1),
   business_name text not null default 'Juniper & Bloom',
   logo_text text not null default 'J',
-  logo_url text not null default ''
+  logo_url text not null default '',
+  origin_kicker text not null default 'OUR HAPPY PLACE',
+  origin_title text not null default 'Between the garden & the great outdoors.',
+  origin_description text not null default 'Rain-washed leaves, mountain air, and afternoons that last a little longer. Palampur isn’t just where we’re from—it’s in every cup we make.',
+  origin_image_url text not null default 'https://images.unsplash.com/photo-1563911892437-1feda0179e1b?auto=format&fit=crop&w=1500&q=85',
+  origin_button_text text not null default 'A note from the hills'
 );
 alter table public.products add column if not exists available_for_purchase boolean not null default true;
 alter table public.site_settings add column if not exists logo_text text not null default 'J';
 alter table public.site_settings add column if not exists logo_url text not null default '';
+alter table public.site_settings add column if not exists origin_kicker text not null default 'OUR HAPPY PLACE';
+alter table public.site_settings add column if not exists origin_title text not null default 'Between the garden & the great outdoors.';
+alter table public.site_settings add column if not exists origin_description text not null default 'Rain-washed leaves, mountain air, and afternoons that last a little longer. Palampur isn’t just where we’re from—it’s in every cup we make.';
+alter table public.site_settings add column if not exists origin_image_url text not null default 'https://images.unsplash.com/photo-1563911892437-1feda0179e1b?auto=format&fit=crop&w=1500&q=85';
+alter table public.site_settings add column if not exists origin_button_text text not null default 'A note from the hills';
 insert into public.site_settings(id,business_name) values (1,'Juniper & Bloom') on conflict(id) do nothing;
 create table if not exists public.store_admins (
   user_id uuid primary key references auth.users(id) on delete cascade
