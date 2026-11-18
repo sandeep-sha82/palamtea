@@ -13,3 +13,6 @@
 .social-links{display:flex;align-items:center;gap:14px}.social-links a{color:#d5ddd2;font-size:9px;letter-spacing:.04em}.social-links a:hover{color:#e4ad7f}.social-links[hidden]{display:none}
 
 .social-links a{display:inline-flex;align-items:center;gap:6px}.social-icon{width:15px;height:15px;display:block;fill:currentColor}.facebook-icon{color:#d5ddd2}.social-links a:hover .facebook-icon{color:#e4ad7f}.instagram-icon{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.instagram-icon .instagram-dot{fill:currentColor;stroke:none}
+
+/* Keep the hero as a clean, image-only banner. */
+.hero-content{display:none}.hero-shade{background:linear-gradient(0deg,rgba(11,30,21,.16),transparent 35%)}.hero-footer{left:0;right:0;justify-content:center;bottom:18px}.hero-footer>span{display:none}.hero-controls span{display:none}
