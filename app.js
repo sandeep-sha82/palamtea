@@ -16,7 +16,7 @@ const sampleBanners = [
  {id:'b3',title:'Grown in the heart of Kangra.',subtitle:'FROM OUR GARDEN TO YOUR CUP',description:'Honest, soulful sips from our little corner of the hills.',image_url:'https://images.unsplash.com/photo-1563911892437-1feda0179e1b?auto=format&fit=crop&w=2200&q=90',active:true}
 ];
 const fallbackImage='https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=1100&q=80';
-let products=[...sampleProducts], banners=[...sampleBanners], bannerIndex=0, businessName='Juniper & Bloom', logoText='J', logoUrl='', dashboardTab='products';
+let products=[...sampleProducts], banners=[...sampleBanners], bannerIndex=0, businessName='Aurum Kangra Tea', logoText='J', logoUrl='', dashboardTab='products';
 let originContent={kicker:'OUR HAPPY PLACE',title:'Between the\ngarden & the\ngreat outdoors.',description:'Rain-washed leaves, mountain air, and afternoons that last a little longer. Palampur isn’t just where we’re from—it’s in every cup we make.',image_url:'https://images.unsplash.com/photo-1563911892437-1feda0179e1b?auto=format&fit=crop&w=1500&q=85',button_text:'A note from the hills'};
 const cartStorageKey='palamtea-cart-v1';
 let contactEmail='aurumkangratea@gmail.com',facebookUrl='',instagramUrl='';
