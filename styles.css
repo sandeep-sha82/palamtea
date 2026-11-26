@@ -16,3 +16,4 @@
 
 /* Keep the hero as a clean, image-only banner. */
 .hero-content{display:none}.hero-shade{background:linear-gradient(0deg,rgba(11,30,21,.16),transparent 35%)}.hero-footer{left:0;right:0;justify-content:center;bottom:18px}.hero-footer>span{display:none}.hero-controls span{display:none}
+.brand-pending .brand-mark{visibility:hidden;width:44px;height:44px}
