@@ -9,7 +9,7 @@ Serve this folder over HTTP (ES modules do not work reliably from a `file://` UR
 ## Connect Supabase
 
 1. Create a Supabase project and run `supabase-schema.sql` in its SQL Editor.
-2. In Supabase Authentication, enable email/password sign-ups for customer accounts. Configure the project Site URL and allowed redirect URLs for your Netlify domain. Create the first admin user from the dashboard.
+2. In Supabase Authentication, enable email/password sign-ups for customer accounts. Configure the project Site URL and allowed redirect URLs, including https://aurumkangratea.netlify.app/welcome.html and https://aurumkangratea.com/welcome.html. Create the first admin user from the dashboard.
 3. Copy that user's UUID from Authentication, then run the commented `insert into public.store_admins` statement in the SQL file with the UUID.
 4. Copy `config.example.js` to `config.js`. Fill in the project's URL and its public anon/publishable key. Never use a service role key in the browser.
 5. Host the folder on any static web host. The SQL setup creates a public `store-images` bucket with admin-only uploads. In the Products or Banners tab, choose an image file from your device to upload it, or paste an image URL. Public Google Drive share links are also accepted; set Drive access to “Anyone with the link” so visitors can see the image.

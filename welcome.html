@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183d2b">
+  <meta name="description" content="Welcome to Aurum Kangra Tea. Your email is confirmed and a little taste of the Kangra hills is waiting.">
+  <title>Welcome to Aurum Kangra Tea</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box}
+    body{position:relative;isolation:isolate;margin:0;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:28px;background:#193d2b;color:#fff;font-family:'DM Sans',Arial,sans-serif}
+    body:before{content:"";position:fixed;inset:0;background:linear-gradient(115deg,rgba(14,38,26,.86),rgba(19,51,35,.56) 55%,rgba(15,39,27,.72)),url("https://images.unsplash.com/photo-1563911892437-1feda0179e1b?auto=format&fit=crop&w=2200&q=90") center/cover no-repeat;z-index:-2}
+    body:after{content:"";position:fixed;inset:0;background:url("tea-leaf-watermark.svg") repeat;background-size:300px 260px;opacity:.24;z-index:-1;pointer-events:none}
+    main{width:min(100%,660px);text-align:center;padding:clamp(34px,7vw,68px) clamp(24px,7vw,72px);border:1px solid #ffffff42;background:rgba(248,246,237,.94);color:#20281f;box-shadow:0 24px 90px #071b1270;backdrop-filter:blur(8px)}
+    .brand-mark{display:grid;place-items:center;width:54px;height:54px;margin:0 auto 23px;border:1px solid #b6bdab;border-radius:50%;color:#183d2b}
+    .brand-mark svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+    .eyebrow{margin:0 0 15px;color:#71806d;font-size:9px;font-weight:700;letter-spacing:.24em}
+    h1{max-width:510px;margin:0 auto;color:#183d2b;font:500 clamp(39px,7vw,64px)/1.08 'Playfair Display',Georgia,serif;letter-spacing:-.035em}
+    h1 em{color:#bc6842;font-weight:500}
+    .message{max-width:410px;margin:22px auto 30px;color:#687066;font-size:13px;line-height:1.8}
+    .visit-link{display:inline-flex;align-items:center;gap:24px;padding:15px 21px;background:#183d2b;color:#fff;font-size:11px;font-weight:600;letter-spacing:.03em;text-decoration:none;transition:background .18s ease,transform .18s ease}
+    .visit-link:hover{background:#274a36;transform:translateY(-1px)}
+    .visit-link span{color:#e4ad7f;font-size:16px}
+    .signature{margin:27px 0 0;color:#8b8d80;font:italic 15px 'Playfair Display',Georgia,serif}
+    @media(max-width:480px){body{padding:16px}main{padding:38px 23px}.message{font-size:12px}}
+    @media(prefers-reduced-motion:reduce){.visit-link{transition:none}}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20V9"/><path d="M12 15C7 15 4.5 12.5 5 8c4.5-.5 7 2 7 7Z"/><path d="M12 12c0-4.5 2.5-7 7-7 .5 4.5-2 7-7 7Z"/></svg></div>
+    <p class="eyebrow">A NOTE FROM THE KANGRA HILLS</p>
+    <h1>Welcome to<br><em>Aurum Kangra Tea.</em></h1>
+    <p class="message">Your email is confirmed. We’re glad you’re here. Take a moment, explore our blends, and find a little calm in every cup.</p>
+    <a class="visit-link" href="https://aurumkangratea.com">Visit Aurum Kangra Tea <span aria-hidden="true">↗</span></a>
+    <p class="signature">Made slowly in the hills of Himachal</p>
+  </main>
+  <script type="module" src="welcome.js"></script>
+</body>
+</html>
