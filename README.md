@@ -9,8 +9,8 @@ Serve this folder over HTTP (ES modules do not work reliably from a `file://` UR
 ## Connect Supabase
 
 1. Create a Supabase project and run `supabase-schema.sql` in its SQL Editor.
-2. In Supabase Authentication, disable public sign-ups. Create the first admin user from the dashboard.
-3. Copy that user's UUID from Authentication, then run the commented `insert into public.store_admins` statement at the bottom of the SQL file with the UUID.
+2. In Supabase Authentication, enable email/password sign-ups for customer accounts. Configure the project Site URL and allowed redirect URLs for your Netlify domain. Create the first admin user from the dashboard.
+3. Copy that user's UUID from Authentication, then run the commented `insert into public.store_admins` statement in the SQL file with the UUID.
 4. Copy `config.example.js` to `config.js`. Fill in the project's URL and its public anon/publishable key. Never use a service role key in the browser.
 5. Host the folder on any static web host. The SQL setup creates a public `store-images` bucket with admin-only uploads. In the Products or Banners tab, choose an image file from your device to upload it, or paste an image URL. Public Google Drive share links are also accepted; set Drive access to “Anyone with the link” so visitors can see the image.
 
@@ -20,9 +20,13 @@ The admin login button is the small person icon in the header. Supabase row-leve
 
 Update the contact email/address and story copy in `index.html`, and change the brand name under the Brand tab after setup. The included sample product and banner content is shown when Supabase is not configured or has no published rows.
 
-## Cart and order requests
+## Customer accounts and saved orders
 
-Published product cards have Add to cart controls. The cart is saved in the visitor's browser with `localStorage` and supports quantity changes, removal, and a subtotal. Visitors can enter delivery details and send an order request through their email app to the contact email in `index.html`. This is a request, not a confirmed order; the store should confirm availability, delivery charges, and payment instructions.
+Customers can create an email/password account or sign in from the account icon in the header. An account is optional: guest checkout is also available. Every checkout saves delivery details and a snapshot of product names, quantities, and server-checked prices in the customer_orders and order_items tables. Guest orders appear in the admin Orders tab; signed-in customers can also revisit their own order history. Row-level security restricts order details to the customer who owns them and store admins.
+
+Run the updated supabase-schema.sql in the Supabase SQL Editor to create the order tables, access policies, and place_customer_order function. The function checks current product availability and prices before saving an order. Enable email/password sign-ups in Supabase Authentication so customers can register. If email confirmation is on, customers must confirm their email before signing in.
+
+The admin Orders tab lists guest and account orders and lets an admin update their status. Orders are requests, not paid or confirmed purchases. The store should follow up with the customer to confirm availability, delivery charges, and payment instructions.
 
 Admins can turn off purchasing for an individual product in Products → Edit → “Allow add to cart” while leaving it visible. To add the required `available_for_purchase` column to an existing Supabase project, run the updated `supabase-schema.sql` in Supabase SQL Editor. It includes an `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` migration.
 
