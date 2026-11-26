@@ -306,3 +306,6 @@ end;
 $$;
 revoke all on function public.get_store_reports() from public;
 grant execute on function public.get_store_reports() to authenticated;
+
+-- Make the new report RPCs visible to Supabase's PostgREST API immediately.
+notify pgrst, 'reload schema';
