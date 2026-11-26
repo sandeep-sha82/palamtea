@@ -87,4 +87,144 @@ create policy "Admins delete store images" on storage.objects for delete to auth
 
 -- After creating the first user in Supabase Authentication, run this once with that user's UUID:
 -- insert into public.store_admins(user_id) values ('PASTE_AUTH_USER_UUID_HERE');
--- Keep public sign-ups disabled in Supabase Authentication settings.
+-- Enable email/password sign-ups in Supabase Authentication for customer accounts.
+
+-- Customer and guest orders. Guests may submit orders, but only signed-in customers
+-- can view their own history; store admins can view all orders for reporting.
+create table if not exists public.customer_orders (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete set null,
+  customer_name text not null,
+  customer_email text not null,
+  customer_phone text not null,
+  delivery_address text not null,
+  order_total numeric(10,2) not null check (order_total >= 0),
+  status text not null default 'pending' check (status in ('pending','confirmed','fulfilled','cancelled')),
+  created_at timestamptz not null default now()
+);
+create table if not exists public.order_items (
+  id uuid primary key default gen_random_uuid(),
+  order_id uuid not null references public.customer_orders(id) on delete cascade,
+  product_id uuid references public.products(id) on delete set null,
+  product_name text not null,
+  unit_price numeric(10,2) not null check (unit_price >= 0),
+  quantity integer not null check (quantity > 0),
+  created_at timestamptz not null default now()
+);
+create index if not exists customer_orders_created_at_idx on public.customer_orders(created_at desc);
+create index if not exists customer_orders_user_id_idx on public.customer_orders(user_id);
+alter table public.customer_orders enable row level security;
+alter table public.order_items enable row level security;
+grant select, update on public.customer_orders to authenticated;
+grant select on public.order_items to authenticated;
+
+drop policy if exists "Customers and admins read orders" on public.customer_orders;
+create policy "Customers and admins read orders" on public.customer_orders
+for select to authenticated using (
+  user_id = (select auth.uid())
+  or exists (select 1 from public.store_admins where user_id = (select auth.uid()))
+);
+drop policy if exists "Admins update orders" on public.customer_orders;
+create policy "Admins update orders" on public.customer_orders
+for update to authenticated using (
+  exists (select 1 from public.store_admins where user_id = (select auth.uid()))
+) with check (
+  exists (select 1 from public.store_admins where user_id = (select auth.uid()))
+);
+drop policy if exists "Customers and admins read order items" on public.order_items;
+create policy "Customers and admins read order items" on public.order_items
+for select to authenticated using (
+  exists (
+    select 1 from public.customer_orders o
+    where o.id = order_id
+      and (
+        o.user_id = (select auth.uid())
+        or exists (select 1 from public.store_admins where user_id = (select auth.uid()))
+      )
+  )
+);
+
+create or replace function public.place_customer_order(
+  p_customer_name text,
+  p_customer_email text,
+  p_customer_phone text,
+  p_delivery_address text,
+  p_items jsonb
+) returns uuid
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_order_id uuid;
+  v_item_count integer;
+  v_available_count integer;
+  v_order_total numeric(10,2);
+begin
+  if nullif(trim(p_customer_name), '') is null
+    or nullif(trim(p_customer_email), '') is null
+    or nullif(trim(p_customer_phone), '') is null
+    or nullif(trim(p_delivery_address), '') is null then
+    raise exception 'Please complete all delivery details.';
+  end if;
+  if trim(p_customer_email) !~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$' then
+    raise exception 'Enter a valid email address.';
+  end if;
+  if jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) = 0 then
+    raise exception 'Your cart is empty.';
+  end if;
+  if exists (
+    select 1 from jsonb_to_recordset(p_items) as item(product_id uuid, quantity integer)
+    where item.product_id is null or item.quantity is null or item.quantity < 1 or item.quantity > 50
+  ) then
+    raise exception 'One or more order quantities are invalid.';
+  end if;
+
+  with requested as (
+    select item.product_id, sum(item.quantity)::integer as quantity
+    from jsonb_to_recordset(p_items) as item(product_id uuid, quantity integer)
+    group by item.product_id
+  )
+  select count(*)::integer, count(p.id)::integer, coalesce(sum(p.price * requested.quantity), 0)::numeric(10,2)
+  into v_item_count, v_available_count, v_order_total
+  from requested
+  left join public.products p on p.id = requested.product_id
+    and p.active = true and p.available_for_purchase = true;
+
+  if v_item_count = 0 or v_item_count > 25 or v_available_count <> v_item_count then
+    raise exception 'A product in your cart is unavailable. Please refresh your cart and try again.';
+  end if;
+  if exists (
+    select 1
+    from (
+      select sum(item.quantity)::integer as quantity
+      from jsonb_to_recordset(p_items) as item(product_id uuid, quantity integer)
+      group by item.product_id
+    ) grouped
+    where grouped.quantity > 50
+  ) then
+    raise exception 'An order can include at most 50 of each product.';
+  end if;
+
+  insert into public.customer_orders (
+    user_id, customer_name, customer_email, customer_phone, delivery_address, order_total
+  ) values (
+    auth.uid(), trim(p_customer_name), lower(trim(p_customer_email)),
+    trim(p_customer_phone), trim(p_delivery_address), v_order_total
+  ) returning id into v_order_id;
+
+  insert into public.order_items (order_id, product_id, product_name, unit_price, quantity)
+  select v_order_id, p.id, p.name, p.price, requested.quantity
+  from (
+    select item.product_id, sum(item.quantity)::integer as quantity
+    from jsonb_to_recordset(p_items) as item(product_id uuid, quantity integer)
+    group by item.product_id
+  ) requested
+  join public.products p on p.id = requested.product_id
+  where p.active = true and p.available_for_purchase = true;
+
+  return v_order_id;
+end;
+$$;
+revoke all on function public.place_customer_order(text,text,text,text,jsonb) from public;
+grant execute on function public.place_customer_order(text,text,text,text,jsonb) to anon, authenticated;
