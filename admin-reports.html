@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183d2b">
+  <meta name="description" content="Private Aurum Kangra Tea store reports.">
+  <title>Store reports — Aurum Kangra Tea</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body.admin-reports-page{min-height:100vh;background:#f6f4ed;color:var(--ink)}
+    .reports-header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 6.1%;background:var(--paper);border-bottom:1px solid var(--line)}
+    .reports-brand{display:flex;align-items:center;gap:11px}.reports-brand-mark{display:grid;place-items:center;width:42px;height:42px;border:1px solid #c4c9ba;border-radius:50%;color:var(--green)}
+    .reports-brand-mark svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+    .reports-brand-copy{display:grid;gap:3px}.reports-brand-copy strong{font:600 17px var(--serif);color:var(--green)}.reports-brand-copy small{font-size:8px;letter-spacing:.18em;color:var(--muted)}
+    .reports-header-actions{display:flex;align-items:center;gap:18px}.reports-header-actions a,.reports-header-actions button{border:0;background:none;color:var(--green);font-size:11px;font-weight:600;text-decoration:none;cursor:pointer}
+    .reports-main{width:min(1180px,90%);margin:0 auto;padding:52px 0 80px}.reports-title{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:28px}
+    .reports-title .eyebrow{margin:0 0 10px;color:#75816f}.reports-title h1{margin:0;color:var(--green);font:500 clamp(38px,5vw,54px)/1.05 var(--serif);letter-spacing:-.03em}.reports-title p{max-width:390px;margin:0;color:var(--muted);font-size:11px;line-height:1.7}
+    .access-card{max-width:470px;margin:40px auto;padding:34px;background:var(--paper);border:1px solid var(--line)}.access-card h1{margin:0 0 10px;color:var(--green);font:500 34px var(--serif)}.access-card>p{font-size:12px;color:var(--muted);line-height:1.6}.access-form{display:grid;gap:12px;margin-top:22px}.access-form label{display:grid;gap:7px;font-size:10px;font-weight:700;color:#596052}.access-form input{padding:12px;border:1px solid var(--line);background:#fff;font:12px var(--sans)}.access-form button{justify-content:center;background:var(--green);color:#fff}.reports-message{min-height:18px;margin:12px 0 0;color:#a04732;font-size:11px}
+    .report-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px;margin:0 0 18px;background:#ebe9df;border:1px solid #dfded4}.report-toolbar label{display:flex;align-items:center;gap:10px;color:#596052;font-size:10px;font-weight:700}.report-toolbar select{min-width:130px;padding:10px 12px;border:1px solid #d4d4c9;background:var(--paper);color:var(--green);font:11px var(--sans)}.report-toolbar button{border:0;background:transparent;color:var(--green);font:600 11px var(--sans);cursor:pointer}
+    .report-tabs{display:flex;gap:24px;overflow:auto;white-space:nowrap;border-bottom:1px solid var(--line);margin:0 0 20px}.report-tab{padding:0 0 12px;border:0;border-bottom:2px solid transparent;background:none;color:#77796d;font:600 11px var(--sans);cursor:pointer}.report-tab.active{border-color:var(--orange);color:var(--orange)}
+    .report-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:0 0 22px}.report-card{padding:20px;background:var(--paper);border:1px solid var(--line)}.report-card small{display:block;color:#78816f;font-size:8px;font-weight:700;letter-spacing:.14em}.report-card strong{display:block;margin-top:12px;color:var(--green);font:500 32px/1 var(--serif)}.report-card span{display:block;margin-top:9px;color:var(--muted);font-size:9px}
+    .report-panel{padding:22px;background:var(--paper);border:1px solid var(--line)}.report-panel h2{margin:0;color:var(--green);font:500 24px var(--serif)}.report-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}.view-toggle{display:flex;gap:5px;padding:4px;background:#f0eee6}.view-toggle button{border:0;background:transparent;padding:8px 11px;color:var(--muted);font:600 10px var(--sans);cursor:pointer}.view-toggle button.active{background:var(--green);color:#fff}
+    .chart-scroll{overflow-x:auto;padding:12px 0 6px}.bar-chart{display:flex;align-items:stretch;gap:8px;width:max-content;min-width:100%;height:250px;padding:0 5px 0 0;border-bottom:1px solid var(--line)}.bar-column{position:relative;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:7px;width:28px;height:100%;color:var(--muted)}.bar-value{font-size:8px;white-space:nowrap}.bar-track{display:flex;align-items:end;justify-content:center;width:100%;height:185px}.bar-fill{width:16px;min-height:2px;background:linear-gradient(180deg,#c67a4e,#183d2b);border-radius:3px 3px 0 0}.bar-label{height:18px;font-size:8px;white-space:nowrap;color:#77796d}.chart-legend{display:flex;gap:18px;flex-wrap:wrap;margin:13px 0 0;color:var(--muted);font-size:10px}.chart-legend span{display:inline-flex;align-items:center;gap:6px}.chart-legend i{width:8px;height:8px;border-radius:50%;background:var(--green)}.chart-legend .visitor-dot{background:var(--orange)}.chart-legend .order-dot{background:#788b68}
+    .table-scroll{overflow:auto}.report-table{width:100%;border-collapse:collapse;font-size:10px}.report-table th,.report-table td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.report-table th{color:#71806e;font-size:8px;letter-spacing:.12em;text-transform:uppercase}.report-table td{color:#565d53;line-height:1.5}.report-table td b{color:var(--green)}.order-status{display:inline-block;padding:4px 8px;border-radius:20px;background:#eeeade;color:#64745f;text-transform:capitalize;white-space:nowrap}
+    .detail-heading{margin:32px 0 14px;color:var(--green);font:500 22px var(--serif)}.reports-empty{padding:28px 12px;text-align:center;color:var(--muted);font-size:11px}.reports-footer{margin-top:18px;color:var(--muted);font-size:9px;line-height:1.6}
+    .overview-charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px}.overview-charts>.report-panel:last-child:nth-child(odd){grid-column:1/-1}.overview-charts>.report-panel{min-width:0;padding:17px}.overview-charts>.report-panel h2{font-size:20px}
+    @media(max-width:760px){.reports-header{padding:16px 5%}.reports-main{width:90%;padding:36px 0 60px}.reports-title{display:block}.reports-title p{margin-top:12px}.report-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.report-panel{padding:16px}.report-panel-heading{align-items:flex-start;flex-direction:column}.report-toolbar{align-items:flex-start;flex-direction:column}.reports-brand-copy small{font-size:7px}.reports-header-actions{gap:10px}}
+    @media(max-width:520px){.overview-charts{grid-template-columns:1fr}.overview-charts>.report-panel:last-child:nth-child(odd){grid-column:auto}}
+  </style>
+</head>
+<body class="admin-reports-page">
+  <header class="reports-header">
+    <a class="reports-brand" href="index.html" aria-label="Back to Aurum Kangra Tea admin">
+      <span class="reports-brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20V9"/><path d="M12 15C7 15 4.5 12.5 5 8c4.5-.5 7 2 7 7Z"/><path d="M12 12c0-4.5 2.5-7 7-7 .5 4.5-2 7-7 7Z"/></svg></span>
+      <span class="reports-brand-copy"><strong>Aurum Kangra Tea</strong><small>STORE REPORTS</small></span>
+    </a>
+    <div class="reports-header-actions"><a href="index.html">← Store admin</a><button id="report-sign-out" type="button" hidden>Sign out</button></div>
+  </header>
+  <main class="reports-main">
+    <section id="access-gate" class="access-card">
+      <p class="eyebrow dark">PRIVATE ADMIN AREA</p>
+      <h1>Store reports</h1>
+      <p>Sign in with your store admin account to view reports.</p>
+      <form id="report-login-form" class="access-form"><label>Email<input name="email" type="email" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button class="button" type="submit">Sign in</button></form>
+      <p id="access-message" class="reports-message" aria-live="polite"></p>
+    </section>
+    <section id="reports-app" hidden>
+      <div class="reports-title"><div><p class="eyebrow">YOUR STORE AT A GLANCE</p><h1>Reports <i>studio.</i></h1></div><p>Review orders, customer registrations, and unique site visitors. Choose a date range, then view each report as a graph or table.</p></div>
+      <div class="report-toolbar"><label>Date range<select id="report-range"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select></label><button id="refresh-reports" type="button">Refresh reports ↻</button></div>
+      <div id="report-summary" class="report-cards"></div>
+      <nav class="report-tabs" aria-label="Report type"><button class="report-tab active" type="button" data-report="overview">Overview</button><button class="report-tab" type="button" data-report="orders">Orders</button><button class="report-tab" type="button" data-report="customers">Registrations</button><button class="report-tab" type="button" data-report="visitors">Website visitors</button></nav>
+      <section id="report-panel" class="report-panel" aria-live="polite"></section>
+      <p class="reports-footer">Visitor totals estimate unique browsers using a first-party browser ID; the same person may appear more than once across devices or after clearing storage. Guest orders are included in order reports.</p>
+    </section>
+  </main>
+  <script type="module" src="admin-reports.js"></script>
+</body>
+</html>
