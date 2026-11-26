@@ -1,4 +1,4 @@
--- Juniper & Bloom storefront schema. Run this in the Supabase SQL editor.
+-- Aurum Kangra tea storefront schema. Run this in the Supabase SQL editor.
 create table if not exists public.products (
   id uuid primary key default gen_random_uuid(),
   name text not null,
@@ -308,4 +308,102 @@ revoke all on function public.get_store_reports() from public;
 grant execute on function public.get_store_reports() to authenticated;
 
 -- Make the new report RPCs visible to Supabase's PostgREST API immediately.
+notify pgrst, 'reload schema';
+
+create or replace function public.get_admin_analytics(
+  p_start timestamptz,
+  p_end timestamptz
+) returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_result jsonb;
+begin
+  if p_start is null or p_end is null or p_end <= p_start or p_end > now() + interval '1 day' then
+    raise exception 'Choose a valid reporting date range.';
+  end if;
+  if not exists (
+    select 1 from public.store_admins
+    where user_id = (select auth.uid())
+  ) then
+    raise exception 'Admin access required.';
+  end if;
+
+  with days as (
+    select generated.day::date as report_date
+    from generate_series(
+      date_trunc('day', p_start),
+      date_trunc('day', p_end),
+      interval '1 day'
+    ) as generated(day)
+  ),
+  customers_by_day as (
+    select cp.created_at::date as report_date, count(*)::integer as customer_count
+    from public.customer_profiles cp
+    where cp.created_at >= p_start and cp.created_at < p_end
+      and not exists (
+        select 1 from public.store_admins sa where sa.user_id = cp.user_id
+      )
+    group by cp.created_at::date
+  ),
+  visitors_by_day as (
+    select visitor.first_seen_at::date as report_date, count(*)::integer as visitor_count
+    from public.website_visitors visitor
+    where visitor.first_seen_at >= p_start and visitor.first_seen_at < p_end
+    group by visitor.first_seen_at::date
+  ),
+  orders_by_day as (
+    select order_row.created_at::date as report_date,
+      count(*)::integer as order_count,
+      coalesce(sum(order_row.order_total),0)::numeric(12,2) as order_total
+    from public.customer_orders order_row
+    where order_row.created_at >= p_start and order_row.created_at < p_end
+    group by order_row.created_at::date
+  )
+  select jsonb_build_object(
+    'summary', jsonb_build_object(
+      'customer_count', (
+        select count(*) from public.customer_profiles cp
+        where cp.created_at >= p_start and cp.created_at < p_end
+          and not exists (
+            select 1 from public.store_admins sa where sa.user_id = cp.user_id
+          )
+      ),
+      'visitor_count', (
+        select count(*) from public.website_visitors visitor
+        where visitor.first_seen_at >= p_start and visitor.first_seen_at < p_end
+      ),
+      'order_count', (
+        select count(*) from public.customer_orders order_row
+        where order_row.created_at >= p_start and order_row.created_at < p_end
+      ),
+      'order_total', (
+        select coalesce(sum(order_row.order_total),0) from public.customer_orders order_row
+        where order_row.created_at >= p_start and order_row.created_at < p_end
+      )
+    ),
+    'daily', coalesce(
+      jsonb_agg(jsonb_build_object(
+        'date', days.report_date,
+        'customer_count', coalesce(customers_by_day.customer_count,0),
+        'visitor_count', coalesce(visitors_by_day.visitor_count,0),
+        'order_count', coalesce(orders_by_day.order_count,0),
+        'order_total', coalesce(orders_by_day.order_total,0)
+      ) order by days.report_date),
+      '[]'::jsonb
+    )
+  )
+  into v_result
+  from days
+  left join customers_by_day using (report_date)
+  left join visitors_by_day using (report_date)
+  left join orders_by_day using (report_date);
+
+  return v_result;
+end;
+$$;
+revoke all on function public.get_admin_analytics(timestamptz,timestamptz) from public;
+grant execute on function public.get_admin_analytics(timestamptz,timestamptz) to authenticated;
 notify pgrst, 'reload schema';
