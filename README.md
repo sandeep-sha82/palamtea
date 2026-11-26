@@ -28,6 +28,8 @@ Run the updated supabase-schema.sql in the Supabase SQL Editor to create the ord
 
 The admin Orders tab lists guest and account orders and lets an admin update their status. Orders are requests, not paid or confirmed purchases. The store should follow up with the customer to confirm availability, delivery charges, and payment instructions.
 
+The admin Reports tab shows registered customer accounts and estimated unique browsers. Existing registrations are backfilled when the updated schema is run. Visitor tracking uses a first-party browser identifier saved in local storage, so it counts browsers rather than reliably identifying people across devices; counts begin after the report migration is installed.
+
 Admins can turn off purchasing for an individual product in Products → Edit → “Allow add to cart” while leaving it visible. To add the required `available_for_purchase` column to an existing Supabase project, run the updated `supabase-schema.sql` in Supabase SQL Editor. It includes an `ALTER TABLE ... ADD COLUMN IF NOT EXISTS` migration.
 
 Online payment is not enabled yet. When you select a provider, add checkout through a Supabase Edge Function or another trusted server endpoint: re-read current prices from Supabase, create the provider checkout session there, and verify the provider's signed webhook before marking an order paid. Keep secret keys out of `config.js` and the browser bundle.

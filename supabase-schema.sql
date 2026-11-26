@@ -228,3 +228,81 @@ end;
 $$;
 revoke all on function public.place_customer_order(text,text,text,text,jsonb) from public;
 grant execute on function public.place_customer_order(text,text,text,text,jsonb) to anon, authenticated;
+
+-- Lightweight, first-party reporting for the admin panel.
+create table if not exists public.customer_profiles (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+create table if not exists public.website_visitors (
+  visitor_id uuid primary key,
+  first_seen_at timestamptz not null default now()
+);
+create index if not exists website_visitors_first_seen_idx on public.website_visitors(first_seen_at desc);
+alter table public.customer_profiles enable row level security;
+alter table public.website_visitors enable row level security;
+revoke all on public.customer_profiles, public.website_visitors from public, anon, authenticated;
+
+create or replace function public.record_customer_signup()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  insert into public.customer_profiles(user_id, created_at)
+  values (new.id, new.created_at)
+  on conflict (user_id) do nothing;
+  return new;
+end;
+$$;
+drop trigger if exists on_auth_user_created_customer_profile on auth.users;
+create trigger on_auth_user_created_customer_profile
+after insert on auth.users
+for each row execute function public.record_customer_signup();
+
+-- Backfill registrations that existed before this report migration.
+insert into public.customer_profiles(user_id, created_at)
+select id, created_at from auth.users
+on conflict (user_id) do nothing;
+
+create or replace function public.record_site_visit(p_visitor_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if p_visitor_id is null then
+    raise exception 'A visitor identifier is required.';
+  end if;
+  insert into public.website_visitors(visitor_id)
+  values (p_visitor_id)
+  on conflict (visitor_id) do nothing;
+end;
+$$;
+revoke all on function public.record_site_visit(uuid) from public;
+grant execute on function public.record_site_visit(uuid) to anon, authenticated;
+
+create or replace function public.get_store_reports()
+returns table(customer_count bigint, unique_visitor_count bigint)
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not exists (
+    select 1 from public.store_admins
+    where user_id = (select auth.uid())
+  ) then
+    raise exception 'Admin access required.';
+  end if;
+  return query
+  select
+    (select count(*) from public.customer_profiles cp
+      where not exists (select 1 from public.store_admins sa where sa.user_id = cp.user_id)),
+    (select count(*) from public.website_visitors);
+end;
+$$;
+revoke all on function public.get_store_reports() from public;
+grant execute on function public.get_store_reports() to authenticated;
